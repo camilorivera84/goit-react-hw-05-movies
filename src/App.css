@@ -1,0 +1,24 @@
+.active {
+  font-weight: bold;
+  color: red;
+}
+/* Estilos para el contenedor del navbar */
+.navbar {
+  display: flex;
+  justify-content: center;
+  background-color: #333;
+  padding: 10px;
+}
+
+/* Estilos para los enlaces de navegación */
+.navbar a {
+  color: white;
+  text-decoration: none;
+  margin: 0 20px;
+}
+
+/* Estilos para el enlace activo */
+.navbar a.active {
+  font-weight: bold;
+  color: red;
+}
