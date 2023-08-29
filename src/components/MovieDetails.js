@@ -1,51 +1,112 @@
 import React, { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
 import axios from 'axios';
 import { API_KEY } from './config';
+import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 
-const MovieDetails = () => {
-  const { movieId } = useParams(); // Obtiene el movieId de los parámetros de la URL
-  const [movieDetails, setMovieDetails] = useState({});
+const Cast = ({ cast }) => (
+  <div>
+    <h2>Cast</h2>
+    <ul>
+      {cast.map(actor => (
+        <li key={actor.id}>
+          {actor.name}
+          <img
+            src={`https://image.tmdb.org/t/p/w200${actor.profile_path}`}
+            alt={`${actor.name} profile`}
+            style={{ marginLeft: '10px' }}
+          />
+        </li>
+      ))}
+    </ul>
+  </div>
+);
+
+const Reviews = ({ reviews }) => (
+  <div>
+    <h2>Reviews</h2>
+    <ul>
+      {reviews.map(review => (
+        <li key={review.id}>
+          <p>Author: {review.author}</p>
+          <p>Content: {review.content}</p>
+        </li>
+      ))}
+    </ul>
+  </div>
+);
+
+const MovieDetails = ({ match, history }) => {
+  const [movie, setMovie] = useState({});
+  const [cast, setCast] = useState([]);
+  const [reviews, setReviews] = useState([]);
+  const [activeSection, setActiveSection] = useState(null); // No default section
 
   useEffect(() => {
-    const fetchMovieDetails = async () => {
-      try {
-        const response = await axios.get(
-          `https://api.themoviedb.org/3/movie/${movieId}?api_key=${API_KEY}`
-        );
-        setMovieDetails(response.data);
-      } catch (error) {
-        console.error(error);
-      }
-    };
+    fetchMovieDetails(match.params.movieId);
+    fetchCast(match.params.movieId);
+    fetchReviews(match.params.movieId);
+  }, [match.params.movieId]);
 
-    fetchMovieDetails();
-  }, [movieId]);
+  const fetchMovieDetails = async movieId => {
+    try {
+      const response = await axios.get(
+        `https://api.themoviedb.org/3/movie/${movieId}?api_key=${API_KEY}`
+      );
+      setMovie(response.data);
+    } catch (error) {
+      console.error('Error fetching movie details:', error);
+    }
+  };
 
-  const { title, poster_path, overview, genres, user_score } = movieDetails;
+  const fetchCast = async movieId => {
+    try {
+      const response = await axios.get(
+        `https://api.themoviedb.org/3/movie/${movieId}/credits?api_key=${API_KEY}`
+      );
+      setCast(response.data.cast);
+    } catch (error) {
+      console.error('Error fetching cast:', error);
+    }
+  };
+
+  const fetchReviews = async movieId => {
+    try {
+      const response = await axios.get(
+        `https://api.themoviedb.org/3/movie/${movieId}/reviews?api_key=${API_KEY}`
+      );
+      setReviews(response.data.results);
+    } catch (error) {
+      console.error('Error fetching reviews:', error);
+    }
+  };
+
+  const switchSection = section => {
+    setActiveSection(section);
+    history.push(`/movies/${match.params.movieId}/${section}`);
+  };
 
   return (
     <div>
-      <Link to="/movies">Go Back</Link>
-      <h2>{title}</h2>
-      <div className="movie-details-container">
-        <div className="movie-details-image">
-          <img
-            src={`https://image.tmdb.org/t/p/w500/${poster_path}`}
-            alt={`${title} Poster`}
-          />
-        </div>
-        <div className="movie-details-info">
-          <h3>{title}</h3>
-          <p>User Score: {user_score}</p>
-          <p>Overview: {overview}</p>
-          <p>Genres: {genres && genres.map(genre => genre.name).join(', ')}</p>
-          <p>
-            <Link to={`/movies/${movieId}/cast`}>Cast</Link> |{' '}
-            <Link to={`/movies/${movieId}/reviews`}>Reviews</Link>
-          </p>
-        </div>
-      </div>
+      <h2>Movie Details</h2>
+      <h3>Title: {movie.title}</h3>
+      {movie.poster_path && (
+        <img
+          src={`https://image.tmdb.org/t/p/w300${movie.poster_path}`}
+          alt={`${movie.title} poster`}
+        />
+      )}
+      <p>Overview: {movie.overview}</p>
+      <p>Score: {movie.vote_average}</p>
+      <p>
+        Genres:{' '}
+        {movie.genres && movie.genres.map(genre => genre.name).join(', ')}
+      </p>
+
+      <button onClick={() => switchSection('Cast')}>Show Cast</button>
+      <button onClick={() => switchSection('Reviews')}>Show Reviews</button>
+
+      {activeSection === 'Cast' && <Cast cast={cast} />}
+      {activeSection === 'Reviews' && <Reviews reviews={reviews} />}
     </div>
   );
 };

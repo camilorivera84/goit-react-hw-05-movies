@@ -25,7 +25,14 @@ const Cast = ({ match }) => {
       <h2>Cast</h2>
       <ul>
         {cast.map(actor => (
-          <li key={actor.id}>{actor.name}</li>
+          <li key={actor.id}>
+            {actor.name}
+            <img
+              src={`https://image.tmdb.org/t/p/w200${actor.profile_path}`}
+              alt={`${actor.name} profile`}
+              style={{ marginLeft: '10px' }}
+            />
+          </li>
         ))}
       </ul>
     </div>
