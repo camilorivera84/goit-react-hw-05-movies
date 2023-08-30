@@ -1,23 +1,27 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { API_KEY } from './config';
-import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 
 const Cast = ({ cast }) => (
   <div>
     <h2>Cast</h2>
-    <ul>
+    <div className="row">
       {cast.map(actor => (
-        <li key={actor.id}>
-          {actor.name}
-          <img
-            src={`https://image.tmdb.org/t/p/w200${actor.profile_path}`}
-            alt={`${actor.name} profile`}
-            style={{ marginLeft: '10px' }}
-          />
-        </li>
+        <div key={actor.id} className="col-md-3 mb-3">
+          <div className="card">
+            <img
+              src={`https://image.tmdb.org/t/p/w200${actor.profile_path}`}
+              alt={`${actor.name} profile`}
+              className="card-img-top"
+            />
+            <div className="card-body">
+              <h5 className="card-title">{actor.name}</h5>
+              <p className="card-text">Character: {actor.character}</p>
+            </div>
+          </div>
+        </div>
       ))}
-    </ul>
+    </div>
   </div>
 );
 
@@ -39,7 +43,7 @@ const MovieDetails = ({ match, history }) => {
   const [movie, setMovie] = useState({});
   const [cast, setCast] = useState([]);
   const [reviews, setReviews] = useState([]);
-  const [activeSection, setActiveSection] = useState(null); // No default section
+  const [activeSection, setActiveSection] = useState(null);
 
   useEffect(() => {
     fetchMovieDetails(match.params.movieId);
@@ -89,6 +93,7 @@ const MovieDetails = ({ match, history }) => {
     <div>
       <h2>Movie Details</h2>
       <h3>Title: {movie.title}</h3>
+
       {movie.poster_path && (
         <img
           src={`https://image.tmdb.org/t/p/w300${movie.poster_path}`}
