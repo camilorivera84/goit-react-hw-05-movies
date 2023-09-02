@@ -17,7 +17,7 @@ const App = () => {
   return (
     <Router>
       <div>
-        <div className="navbar" className="container mt-4 mb-4">
+        <div>
           <NavLink to="/" exact activeClassName="active" className="ml-4">
             Home
           </NavLink>
