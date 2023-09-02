@@ -23,9 +23,9 @@ const Cast = ({ match }) => {
   return (
     <div>
       <h2>Cast</h2>
-      <ul>
+      <ul className="list-group">
         {cast.map(actor => (
-          <li key={actor.id}>
+          <li key={actor.id} className="list-group-item">
             {actor.name}
             <img
               src={`https://image.tmdb.org/t/p/w200${actor.profile_path}`}

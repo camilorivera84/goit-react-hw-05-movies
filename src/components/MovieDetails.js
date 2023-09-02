@@ -1,43 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { API_KEY } from './config';
-
-const Cast = ({ cast }) => (
-  <div>
-    <h2>Cast</h2>
-    <div className="row">
-      {cast.map(actor => (
-        <div key={actor.id} className="col-md-3 mb-3">
-          <div className="card">
-            <img
-              src={`https://image.tmdb.org/t/p/w200${actor.profile_path}`}
-              alt={`${actor.name} profile`}
-              className="card-img-top"
-            />
-            <div className="card-body">
-              <h5 className="card-title">{actor.name}</h5>
-              <p className="card-text">Character: {actor.character}</p>
-            </div>
-          </div>
-        </div>
-      ))}
-    </div>
-  </div>
-);
-
-const Reviews = ({ reviews }) => (
-  <div>
-    <h2>Reviews</h2>
-    <ul>
-      {reviews.map(review => (
-        <li key={review.id}>
-          <p>Author: {review.author}</p>
-          <p>Content: {review.content}</p>
-        </li>
-      ))}
-    </ul>
-  </div>
-);
+import Cast from './Cast';
+import Reviews from './Reviews';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 const MovieDetails = ({ match, history }) => {
   const [movie, setMovie] = useState({});
@@ -107,8 +73,18 @@ const MovieDetails = ({ match, history }) => {
         {movie.genres && movie.genres.map(genre => genre.name).join(', ')}
       </p>
 
-      <button onClick={() => switchSection('Cast')}>Show Cast</button>
-      <button onClick={() => switchSection('Reviews')}>Show Reviews</button>
+      <button
+        className="btn btn-primary ml-4"
+        onClick={() => switchSection('Cast')}
+      >
+        Show Cast
+      </button>
+      <button
+        className="btn btn-primary"
+        onClick={() => switchSection('Reviews')}
+      >
+        Show Reviews
+      </button>
 
       {activeSection === 'Cast' && <Cast cast={cast} />}
       {activeSection === 'Reviews' && <Reviews reviews={reviews} />}

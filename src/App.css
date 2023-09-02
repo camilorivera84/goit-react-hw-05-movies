@@ -15,10 +15,14 @@
   color: white;
   text-decoration: none;
   margin: 0 20px;
+  text-decoration: none;
 }
 
 /* Estilos para el enlace activo */
 .navbar a.active {
   font-weight: bold;
   color: red;
+}
+.ml-4 {
+  margin-right: 20px;
 }

@@ -17,8 +17,8 @@ const App = () => {
   return (
     <Router>
       <div>
-        <div className="navbar">
-          <NavLink to="/" exact activeClassName="active">
+        <div className="navbar" className="container mt-4 mb-4">
+          <NavLink to="/" exact activeClassName="active" className="ml-4">
             Home
           </NavLink>
           <NavLink to="/movies" activeClassName="active">
@@ -27,14 +27,16 @@ const App = () => {
         </div>
 
         <Suspense fallback={<div>Loading...</div>}>
-          <Switch>
-            <Route path="/" exact component={Home} />
-            <Route path="/movies" exact component={Movies} />
-            <Route path="/movies/:movieId" exact component={MovieDetails} />
-            <Route path="/movies/:movieId/cast" component={Cast} />
-            <Route path="/movies/:movieId/reviews" component={Reviews} />
-            <Redirect to="/" />
-          </Switch>
+          <div className="container mt-4 mb-4">
+            <Switch>
+              <Route path="/" exact component={Home} />
+              <Route path="/movies" exact component={Movies} />
+              <Route path="/movies/:movieId" exact component={MovieDetails} />
+              <Route path="/movies/:movieId/cast" component={Cast} />
+              <Route path="/movies/:movieId/reviews" component={Reviews} />
+              <Redirect to="/" />
+            </Switch>
+          </div>
         </Suspense>
       </div>
     </Router>
