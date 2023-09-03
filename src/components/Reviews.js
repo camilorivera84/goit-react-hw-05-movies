@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { API_KEY } from './config';
+import { useParams } from 'react-router-dom';
 
-const Reviews = ({ match }) => {
+const Reviews = () => {
+  const { movieId } = useParams(); // Obtén el valor de movieId desde el contexto de enrutamiento
   const [reviews, setReviews] = useState([]);
 
   useEffect(() => {
-    fetchReviews(match.params.movieId);
-  }, [match.params.movieId]);
+    fetchReviews(movieId);
+  }, [movieId]);
 
   const fetchReviews = async movieId => {
     try {

@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { API_KEY } from './config';
+import { useParams } from 'react-router-dom';
 
-const Cast = ({ match }) => {
+const Cast = () => {
+  const { movieId } = useParams();
   const [cast, setCast] = useState([]);
 
   useEffect(() => {
-    fetchCast(match.params.movieId);
-  }, [match.params.movieId]);
+    fetchCast(movieId);
+  }, [movieId]);
 
   const fetchCast = async movieId => {
     try {
@@ -26,12 +28,17 @@ const Cast = ({ match }) => {
       <ul className="list-group">
         {cast.map(actor => (
           <li key={actor.id} className="list-group-item">
-            {actor.name}
             <img
               src={`https://image.tmdb.org/t/p/w200${actor.profile_path}`}
               alt={`${actor.name} profile`}
-              style={{ marginLeft: '10px' }}
+              style={{ marginRight: '10px' }}
             />
+            <div>
+              <strong>Name:</strong> {actor.name}
+            </div>
+            <div>
+              <strong>Character:</strong> {actor.character}
+            </div>
           </li>
         ))}
       </ul>

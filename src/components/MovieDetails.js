@@ -1,21 +1,23 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { API_KEY } from './config';
-import Cast from './Cast';
-import Reviews from './Reviews';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { useParams, useNavigate, Outlet } from 'react-router-dom';
 
-const MovieDetails = ({ match, history }) => {
+const MovieDetails = () => {
+  const { movieId } = useParams();
+  const navigate = useNavigate();
+
   const [movie, setMovie] = useState({});
   const [cast, setCast] = useState([]);
   const [reviews, setReviews] = useState([]);
   const [activeSection, setActiveSection] = useState(null);
 
   useEffect(() => {
-    fetchMovieDetails(match.params.movieId);
-    fetchCast(match.params.movieId);
-    fetchReviews(match.params.movieId);
-  }, [match.params.movieId]);
+    fetchMovieDetails(movieId);
+    fetchCast(movieId);
+    fetchReviews(movieId);
+  }, [movieId]);
 
   const fetchMovieDetails = async movieId => {
     try {
@@ -52,42 +54,51 @@ const MovieDetails = ({ match, history }) => {
 
   const switchSection = section => {
     setActiveSection(section);
-    history.push(`/movies/${match.params.movieId}/${section}`);
+    navigate(`/movies/${movieId}/${section}`);
   };
 
   return (
     <div>
-      <h2>Movie Details</h2>
-      <h3>Title: {movie.title}</h3>
+      <div style={{ display: 'flex', alignItems: 'center' }}>
+        <div>
+          <h2>Movie Details</h2>
+          <h3>Title: {movie.title}</h3>
 
-      {movie.poster_path && (
-        <img
-          src={`https://image.tmdb.org/t/p/w300${movie.poster_path}`}
-          alt={`${movie.title} poster`}
-        />
-      )}
-      <p>Overview: {movie.overview}</p>
-      <p>Score: {movie.vote_average}</p>
-      <p>
-        Genres:{' '}
-        {movie.genres && movie.genres.map(genre => genre.name).join(', ')}
-      </p>
-
-      <button
-        className="btn btn-primary ml-4"
-        onClick={() => switchSection('Cast')}
-      >
-        Show Cast
-      </button>
-      <button
-        className="btn btn-primary"
-        onClick={() => switchSection('Reviews')}
-      >
-        Show Reviews
-      </button>
-
-      {activeSection === 'Cast' && <Cast cast={cast} />}
-      {activeSection === 'Reviews' && <Reviews reviews={reviews} />}
+          {movie.poster_path && (
+            <img
+              src={`https://image.tmdb.org/t/p/w300${movie.poster_path}`}
+              alt={`${movie.title} poster`}
+            />
+          )}
+        </div>
+        <div style={{ marginLeft: '20px' }}>
+          <p>
+            <strong>Overview:</strong> {movie.overview}
+          </p>
+          <p>
+            <strong>Score:</strong> {movie.vote_average}
+          </p>
+          <p>
+            <strong>Genres:</strong>{' '}
+            {movie.genres && movie.genres.map(genre => genre.name).join(', ')}
+          </p>
+        </div>
+      </div>
+      <div style={{ marginTop: '20px' }}>
+        <button
+          className="btn btn-primary ml-4"
+          onClick={() => switchSection('cast')}
+        >
+          Show Cast
+        </button>
+        <button
+          className="btn btn-primary"
+          onClick={() => switchSection('reviews')}
+        >
+          Show Reviews
+        </button>
+      </div>
+      <Outlet />
     </div>
   );
 };
