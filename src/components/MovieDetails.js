@@ -9,14 +9,9 @@ const MovieDetails = () => {
   const navigate = useNavigate();
 
   const [movie, setMovie] = useState({});
-  const [cast, setCast] = useState([]);
-  const [reviews, setReviews] = useState([]);
-  const [activeSection, setActiveSection] = useState(null);
 
   useEffect(() => {
     fetchMovieDetails(movieId);
-    fetchCast(movieId);
-    fetchReviews(movieId);
   }, [movieId]);
 
   const fetchMovieDetails = async movieId => {
@@ -30,30 +25,7 @@ const MovieDetails = () => {
     }
   };
 
-  const fetchCast = async movieId => {
-    try {
-      const response = await axios.get(
-        `https://api.themoviedb.org/3/movie/${movieId}/credits?api_key=${API_KEY}`
-      );
-      setCast(response.data.cast);
-    } catch (error) {
-      console.error('Error fetching cast:', error);
-    }
-  };
-
-  const fetchReviews = async movieId => {
-    try {
-      const response = await axios.get(
-        `https://api.themoviedb.org/3/movie/${movieId}/reviews?api_key=${API_KEY}`
-      );
-      setReviews(response.data.results);
-    } catch (error) {
-      console.error('Error fetching reviews:', error);
-    }
-  };
-
   const switchSection = section => {
-    setActiveSection(section);
     navigate(`/movies/${movieId}/${section}`);
   };
 
